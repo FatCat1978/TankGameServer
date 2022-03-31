@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ConnectionManager extends Thread
 {
@@ -15,7 +16,7 @@ public class ConnectionManager extends Thread
 	public final static int connectionTimeOut = 5000; //5000ms should be perfect.
 	
 	public static ArrayList<String> activeIPs = new ArrayList<String>();
-	
+	public static HashMap<String,String> IpToGameKey= new HashMap<String,String>();
 	
 	private ServerSocket serverSocket; //what socket are we on?
 	public static final int port = 6066;
@@ -46,9 +47,12 @@ public class ConnectionManager extends Thread
 						{
 							try {
 							String incoming = in.readUTF();//pauses the thread!
-							responses++;
-							System.out.println("Responses to client connection: " + responses);
-							String outgoing = PacketManager.HandlePacket(incoming);
+							//responses++;
+							System.out.println("PACKET RECIEVED!:" + incoming);
+							//System.out.println("Responses to client connection: " + responses);
+							String outgoing = PacketManager.HandlePacket(incoming, server.getRemoteSocketAddress().toString());
+							System.out.println("PACKET SENT!:" + outgoing);
+							
 							
 							out.writeUTF(outgoing);
 							}

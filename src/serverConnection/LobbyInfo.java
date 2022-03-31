@@ -2,10 +2,10 @@ package serverConnection;
 
 public class LobbyInfo
 {
-	String chosenTankType = ""; //sent TO the server
-	String connectedPlayers = ""; //gotten FROM the server
-	String yourKey = ""; //FROM the server.
-	boolean GameInProgress = false; //From the server
-	int RequiredPlayers = 0; //from the server. 
-		
+	public String chosenTankType = ""; //sent TO the server
+	public String connectedPlayers = ""; //gotten FROM the server
+	public String yourKey = ""; //FROM the server.
+	public boolean GameInProgress = false; //From the server
+	public int RequiredPlayers = 0; //from the server. 
+	public boolean StopExistingInLobby = false; //tells the client we're shifting to a REAL BOY GAME
 }

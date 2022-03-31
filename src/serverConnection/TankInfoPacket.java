@@ -11,5 +11,18 @@ public class TankInfoPacket
 	
 	float turretAngle = 0;
 	float tankAngle = 0;
+	public void initNew(String chosenTankType, String newkey) //TODO, rework!
+		{
+			x = 500;
+			y = 500;
+			
+			healthmax = 500;
+			health = healthmax;
+			
+			size = chosenTankType;
+			key = newkey;
+			// TODO Auto-generated method stub
+			
+		}
 
 }
