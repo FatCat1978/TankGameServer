@@ -1,3 +1,4 @@
+import serverConnection.ConnectionManager;
 
 public class ServerManager
 {
@@ -8,14 +9,11 @@ public class ServerManager
 		
 	public static GameManager gameState; 
 	
-	public static PacketManager packetManager;
-	
-	public static ConnectionManager connections;
+	public static ConnectionManager connections = new ConnectionManager();
 	
 	public static void main(String[] args)
 		{
-			// TODO Auto-generated method stub
-			System.out.println("hehe");
+			connections.run();
 		}
 
 }
