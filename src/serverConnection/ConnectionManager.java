@@ -25,8 +25,8 @@ public class ConnectionManager extends Thread
 	{
 			try 
 			{
-				int responses = 0;
 				serverSocket = new ServerSocket(port);
+				serverSocket.setSoTimeout(0);//set an infinite timeout for awaiting connections.
 				
 				System.out.println("Connection manager booted."); //TODO - log4j?
 				while(true)
@@ -34,37 +34,14 @@ public class ConnectionManager extends Thread
 					try
 						{
 						//todo, logging!
-						serverSocket.setSoTimeout(0);//set an infinite timeout for awaiting connections.
+						
 						Socket server = serverSocket.accept(); //accept any connections. this Pauses the thread for timeout duration, which is why we keep it
 						//as infinite until we get a client connection.
 						//if we're here, we HAVE a connection!
-						System.out.println("Client connected!");
-						serverSocket.setSoTimeout(connectionTimeOut);
+						System.out.println("Client connected with IP: " + server.getRemoteSocketAddress().toString());
 						ConnectionFrom(server.getRemoteSocketAddress().toString()); //we have a connection from X IP - add it to the arraylist.
-						DataInputStream in = new DataInputStream(server.getInputStream()); //get the stream from the socket we just made.
-						DataOutputStream out = new DataOutputStream(server.getOutputStream());//prep the output stream for returning info to the client.
-						while(true)
-						{
-							try {
-							String incoming = in.readUTF();//pauses the thread!
-							//responses++;
-							System.out.println("PACKET RECIEVED!:" + incoming);
-							//System.out.println("Responses to client connection: " + responses);
-							String outgoing = PacketManager.HandlePacket(incoming, server.getRemoteSocketAddress().toString());
-							System.out.println("PACKET SENT!:" + outgoing);
-							
-							
-							out.writeUTF(outgoing);
-							}
-							catch(Exception e)
-							{
-								DisconnectFrom(server.getRemoteSocketAddress().toString());
-								break; //this is incredibly ugly and I absolutely hate it.
-								//but it works :)
-							}
-						}
-					
-					
+						new Thread(new ConnectedClient(server)).start(); // Put to a new thread.
+						//I WISH I KNEW IT WASNT IMPLICIT LIKE I THOUGHT.
 						}
 					catch(SocketTimeoutException ste)
 						{
@@ -84,14 +61,8 @@ public class ConnectionManager extends Thread
 	
 
 	}
-	//for run
-	//iterate endlessly
-	//accept connection
-		//wait for anything from the client
-		//form a response! update if the information is NOT null - null means no changes from the last thing sent;
-		//basically - we're having fun here. client sends a request as often as it wants, server responds!
 
-	private void DisconnectFrom(String ipstr)
+	static void DisconnectFrom(String ipstr) //called from inside a  thread - has package level sharing.
 		{
 			if(activeIPs.contains(ipstr))
 				activeIPs.remove(ipstr);
