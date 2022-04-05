@@ -26,3 +26,6 @@ public class TankInfoPacket
 		}
 
 }
+//This is simply another holder class for the client/server communication protocol.
+//It's basically just a simplified version of the tank. written before I had enough dealing with Jared's inferno tier tank classes and rewrote it on the client.
+//I will never know why each tank needed to be 3 independent classes. 

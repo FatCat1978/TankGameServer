@@ -15,7 +15,12 @@ public static void addToPool(String sentBy)
 		
 	}
 
-//what needs to be done
+//what needs to be done: everything.
+
+//this is a barren, sad class. never finished, and likely never to be.
+//I probably would've had motivation to get it working, and things like distributed spawns etc working if something as essential yet simple as projectiles weren't still a WIP 
+//the literal day the project was due.
+//I wish this was a solo project :(
 
 
 

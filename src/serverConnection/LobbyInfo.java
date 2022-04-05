@@ -1,5 +1,8 @@
 package serverConnection;
 
+//alright, this is another one of those simple "information holder" classes that're basically entirely used with gson.
+//basically, what we send back to the player IF they were in the lobby.
+
 public class LobbyInfo
 {
 	public String chosenTankType = ""; //sent TO the server

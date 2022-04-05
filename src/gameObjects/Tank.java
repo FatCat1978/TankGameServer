@@ -36,3 +36,6 @@ public class Tank
 	}
 }
 
+//Never actually used, though this one is on me. I gave up on bothering to try and verify tanks serverside (didn't have much to work with)
+//soooo this is unused. we just store the tankinfopackets directly instead of bothering to convert.
+//sigh.
