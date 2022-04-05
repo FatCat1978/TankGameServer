@@ -7,8 +7,8 @@ public class TankInfoPacket
 	int healthmax = 0;
 	String key = "";
 	String size = "ERROR";
-	float x;
-	float y;
+	float x = 500;
+	float y = 500;
 	
 	float turretAngle = 0;
 	float tankAngle = 0;

@@ -44,9 +44,15 @@ public static float randFloat(float min, float max) {
 			
 			if(ConnectionManager.IpToGameKey.containsKey(sentBy)) //might be a bit confusing, but the key is the value of the hash in ConnectionManager, with the IP as the key to that value
 			{
+				
 				//does this IP already have a key?
 				tankKey = ConnectionManager.IpToGameKey.get(sentBy);//we send this back to the client so they know what tank they're controlling.
-				
+				if(GameManager.deadKeys.contains(tankKey))
+				{
+					System.out.println("Giving:" + sentBy + " A new Key due to death!" );
+					tankKey = "" + new Date().getTime();
+					ConnectionManager.IpToGameKey.put(sentBy, tankKey);
+				}
 			}
 			else
 			{
@@ -66,7 +72,10 @@ public static float randFloat(float min, float max) {
 			if(!GameManager.TankHash.containsKey(tankKey) && !sentPacketContent.chosenTankType.equals("NO_SELECTION") && sentPacketContent.Ready && !GameManager.deadKeys.contains(tankKey))
 			{
 				//make a new tank.
+				
 				TankInfoPacket t = new TankInfoPacket();
+				
+				t.TankCreatedAt = new Date().getTime();
 				
 				float nx = randFloat(100,900);
 				float ny = randFloat(100,900);

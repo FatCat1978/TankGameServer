@@ -67,7 +67,17 @@ public class GameManager extends Thread
 		for(String key : TankHash.keySet())
 		{
 			TankInfoPacket Tank = TankHash.get(key);
+			
+			//make sure we're in the right ballpark.
+			if(Tank.tankAngle > 360)
+				Tank.tankAngle -= 360;
+			if(Tank.tankAngle < 0)
+				Tank.tankAngle += 360;
+			
 			if(Tank.dead)
+				continue;
+			
+			if(Tank.TankCreatedAt < new Date().getTime()+5000)
 				continue;
 			
 			
@@ -79,11 +89,31 @@ public class GameManager extends Thread
 				{
 					
 					TankInfoPacket TankAgainst = TankHash.get(keyAgainst);
+					
+					if(TankAgainst.tankAngle > 360)
+						TankAgainst.tankAngle -= 360;
+					if(TankAgainst.tankAngle < 0)
+						TankAgainst.tankAngle += 360;
+					
 					if(TankAgainst.dead)
+						continue;
+					if(TankAgainst.TankCreatedAt < new Date().getTime()+5000)
 						continue;
 					if(dist(Tank.x,Tank.y,TankAgainst.x,TankAgainst.y) < 48) //arbitrary number, change it
 					{
+						//we are in collision range.
 						System.out.println("TANK COLLISION!");
+						
+						//are we facing their side? ae, are we more than 60 degrees above or below their current angle?
+						
+						boolean killAgainst = false;
+						
+						//we need to compare their angles to figure this out.
+						//if we're facing towards them, with a threshold of 60, and they ARENT facing us, they're dead.
+						
+						
+						
+						
 						Tank.dead = true;
 						TankAgainst.dead = true;
 						
