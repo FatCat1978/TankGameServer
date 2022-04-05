@@ -2,6 +2,7 @@ package serverConnection;
 
 public class TankInfoPacket
 {
+	long TankCreatedAt; //we need this for knowing how long the iframes last.
 	int health = 0 ;
 	int healthmax = 0;
 	String key = "";
@@ -11,7 +12,8 @@ public class TankInfoPacket
 	
 	float turretAngle = 0;
 	float tankAngle = 0;
-	public void initNew(String chosenTankType, String newkey) //TODO, rework!
+	public boolean dead = false;
+	public void initNew(String chosenTankType, String newkey, float X, float Y) //TODO, rework!
 		{
 			x = 500;
 			y = 500;

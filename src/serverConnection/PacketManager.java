@@ -1,6 +1,7 @@
 package serverConnection;
 
 import java.util.Date;
+import java.util.Random;
 
 import com.google.gson.Gson;
 
@@ -8,6 +9,20 @@ import com.google.gson.Gson;
 //THIS is how the server takes information from the client, and decides what to return with it.
 public class PacketManager
 {
+	//I've stopped caring about making things neat at this point. I just want this trashpile done.
+	//on the bright side, at least this project gave me a superiority complex when it comes to server code.
+	public static final int TILE_SIZE = 64;
+	public static final int MAP_SIZE = 20; //square. 
+	
+
+public static float randFloat(float min, float max) {
+
+    Random rand = new Random();
+
+    return rand.nextFloat() * (max - min) + min;
+
+}
+	
 	public static String HandlePacket(String incomingPacket, String sentBy)
 	{
 		String returnedPacket = ""; //the text form of what we're actually going to send to the client.
@@ -21,7 +36,7 @@ public class PacketManager
 		{
 			returned.packetType = "lobby";
 			LobbyInfo sentPacketContent = converter.fromJson(C2P.packetInfo,LobbyInfo.class);
-			System.out.println("Packet tank type:" + sentPacketContent.chosenTankType);
+
 			LobbyInfo returnedPacketContent = new LobbyInfo();
 			returnedPacketContent.StopExistingInLobby = true;
 			//see if the IP already has a key or not.
@@ -45,15 +60,21 @@ public class PacketManager
 			returnedPacketContent.yourKey = tankKey;
 			LobbyManager.addToPool(sentBy);
 			
-			if(!sentPacketContent.chosenTankType.equals("NO_SELECTION"))
+			if(!sentPacketContent.chosenTankType.equals("NO_SELECTION") && sentPacketContent.Ready)
 				returnedPacketContent.StopExistingInLobby = true; //DEBUG/TEMPORARY!!
-			//SERIOUSLY. TEMPORARY. //Ah. yes. the temporary perm. solution.
-			if(!GameManager.TankHash.containsKey(tankKey) && !sentPacketContent.chosenTankType.equals("NO_SELECTION"))
+			//SERIOUSLY. TEMPORARY. //Ah. yes. the temporary perm. solution. classic.
+			if(!GameManager.TankHash.containsKey(tankKey) && !sentPacketContent.chosenTankType.equals("NO_SELECTION") && sentPacketContent.Ready && !GameManager.deadKeys.contains(tankKey))
 			{
 				//make a new tank.
 				TankInfoPacket t = new TankInfoPacket();
-				t.initNew(sentPacketContent.chosenTankType, tankKey);
+				
+				float nx = randFloat(100,900);
+				float ny = randFloat(100,900);
+				
+				t.initNew(sentPacketContent.chosenTankType, tankKey,  nx, ny );
 				t.size = sentPacketContent.chosenTankType;
+				t.x = (TILE_SIZE*MAP_SIZE)/2;
+				t.y= (TILE_SIZE*MAP_SIZE)/2;
 				//System.out.println("T.SIZE:" + t.size);
 				GameManager.TankHash.put(tankKey, t);
 			}
@@ -70,14 +91,30 @@ public class PacketManager
 			//the TRUTH. even if it's not.
 			returned.packetType = "ingame";
 			
+			GameStateSend returnedToClient = new GameStateSend();
+			
 			TankInfoPacket fromClient = converter.fromJson(C2P.packetInfo, TankInfoPacket.class);
+			TankInfoPacket CurrentOnServer = GameManager.TankHash.get(ConnectionManager.IpToGameKey.get(sentBy));
 			String oldSize = GameManager.TankHash.get(ConnectionManager.IpToGameKey.get(sentBy)).size;
 			if(oldSize != null)
-				fromClient.size = oldSize;
+				fromClient.size = oldSize; 
 			
-			GameManager.TankHash.put(ConnectionManager.IpToGameKey.get(sentBy),fromClient);
+			if(!GameManager.deadKeys.contains(ConnectionManager.IpToGameKey.get(sentBy))) //if it's dead we stop caring instantly.
+				GameManager.TankHash.put(ConnectionManager.IpToGameKey.get(sentBy),fromClient);
 			
-			returned.packetInfo = converter.toJson(GameManager.TankHash); //when updating, the client ignores it's own tank!
+			returnedToClient.allGameTanks = GameManager.TankHash;
+			//see if we're dead.
+			if(CurrentOnServer.dead)
+			{
+				System.out.println("FORCING THEIR UPDATE! THEY DIED!!");
+				returnedToClient.youDied = true;
+				returnedToClient.forceUpdateTank = true;
+			}
+			
+			
+			returnedToClient.allTankGraveLocs = GameManager.graveLocs;
+			
+			returned.packetInfo = converter.toJson(returnedToClient); //when updating, the client ignores it's own tank!
 			//we don't need a "complicated" holder class here. we probably would if PROJECTILES ever got DONE
 			
 		}

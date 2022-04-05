@@ -5,6 +5,7 @@ package serverConnection;
 
 public class LobbyInfo
 {
+	public boolean Ready = false; //do we spawn the tank??
 	public String chosenTankType = ""; //sent TO the server
 	public String connectedPlayers = ""; //gotten FROM the server
 	public String yourKey = ""; //FROM the server.
