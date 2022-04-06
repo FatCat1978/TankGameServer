@@ -77,7 +77,7 @@ public class GameManager extends Thread
 			if(Tank.dead)
 				continue;
 			
-			if(Tank.TankCreatedAt < new Date().getTime()+5000)
+			if(Tank.TankCreatedAt+5000 > new Date().getTime())
 				continue;
 			
 			
@@ -97,7 +97,7 @@ public class GameManager extends Thread
 					
 					if(TankAgainst.dead)
 						continue;
-					if(TankAgainst.TankCreatedAt < new Date().getTime()+5000)
+					if(TankAgainst.TankCreatedAt+5000 > new Date().getTime())
 						continue;
 					if(dist(Tank.x,Tank.y,TankAgainst.x,TankAgainst.y) < 48) //arbitrary number, change it
 					{
@@ -112,7 +112,7 @@ public class GameManager extends Thread
 						//if we're facing towards them, with a threshold of 60, and they ARENT facing us, they're dead.
 						
 						
-						
+						//can't figure it out, just kill both.
 						
 						Tank.dead = true;
 						TankAgainst.dead = true;
