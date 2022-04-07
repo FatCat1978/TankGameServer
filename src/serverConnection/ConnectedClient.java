@@ -59,6 +59,7 @@ public class ConnectedClient implements Runnable //it turns OUT that I was lied 
 				}
 				catch(Exception e)
 				{
+					e.printStackTrace();
 					ConnectionManager.DisconnectFrom(IP);
 					break; //this is incredibly ugly and I absolutely hate it.
 					//but it works :) //not anymore! thread time! //now it does???

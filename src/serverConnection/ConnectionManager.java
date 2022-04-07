@@ -72,9 +72,9 @@ public class ConnectionManager extends Thread
 	static void DisconnectFrom(String ipstr) //called from inside a  thread - has package level sharing.
 	//functionally useless, but at least I can reuse this code in the future if I wanted to.
 		{
+			System.out.println("DISCONNECT FROM:" + ipstr);
 			if(activeIPs.contains(ipstr))
 				activeIPs.remove(ipstr);
-			
 		}
 
 	private void ConnectionFrom(String ipstr)

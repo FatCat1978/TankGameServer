@@ -77,7 +77,7 @@ public class GameManager extends Thread
 			if(Tank.dead)
 				continue;
 			
-			if(Tank.TankCreatedAt+5000 > new Date().getTime())
+			if((Tank.TankCreatedAt+5000) > new Date().getTime())
 				continue;
 			
 			
@@ -97,14 +97,20 @@ public class GameManager extends Thread
 					
 					if(TankAgainst.dead)
 						continue;
-					if(TankAgainst.TankCreatedAt+5000 > new Date().getTime())
+					if((TankAgainst.TankCreatedAt+5000) > new Date().getTime())
 						continue;
 					if(dist(Tank.x,Tank.y,TankAgainst.x,TankAgainst.y) < 48) //arbitrary number, change it
 					{
+						
 						//we are in collision range.
 						System.out.println("TANK COLLISION!");
 						
 						//are we facing their side? ae, are we more than 60 degrees above or below their current angle?
+						if((TankAgainst.TankCreatedAt+5000) > new Date().getTime())
+							continue;
+						
+						if((Tank.TankCreatedAt+5000) > new Date().getTime())
+							continue;
 						
 						boolean killAgainst = false;
 						

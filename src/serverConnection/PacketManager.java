@@ -72,7 +72,7 @@ public static float randFloat(float min, float max) {
 			if(!GameManager.TankHash.containsKey(tankKey) && !sentPacketContent.chosenTankType.equals("NO_SELECTION") && sentPacketContent.Ready && !GameManager.deadKeys.contains(tankKey))
 			{
 				//make a new tank.
-				
+				System.out.println("TANK FROM IP:" +sentBy +":"+ sentPacketContent.chosenTankType);
 				TankInfoPacket t = new TankInfoPacket();
 				
 				t.TankCreatedAt = new Date().getTime();
@@ -104,7 +104,15 @@ public static float randFloat(float min, float max) {
 			
 			TankInfoPacket fromClient = converter.fromJson(C2P.packetInfo, TankInfoPacket.class);
 			TankInfoPacket CurrentOnServer = GameManager.TankHash.get(ConnectionManager.IpToGameKey.get(sentBy));
-			String oldSize = GameManager.TankHash.get(ConnectionManager.IpToGameKey.get(sentBy)).size;
+			
+			String oldSize = null;
+			if(CurrentOnServer != null)
+			{
+				oldSize = GameManager.TankHash.get(ConnectionManager.IpToGameKey.get(sentBy)).size;
+			}
+			
+			
+			
 			if(oldSize != null)
 				fromClient.size = oldSize; 
 			
@@ -113,7 +121,7 @@ public static float randFloat(float min, float max) {
 			
 			returnedToClient.allGameTanks = GameManager.TankHash;
 			//see if we're dead.
-			if(CurrentOnServer.dead)
+			if(CurrentOnServer == null || CurrentOnServer.dead)
 			{
 				System.out.println("FORCING THEIR UPDATE! THEY DIED!!");
 				returnedToClient.youDied = true;
